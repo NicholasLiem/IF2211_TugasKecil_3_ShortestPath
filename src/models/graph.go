@@ -1,23 +1,23 @@
 package model
 
-type node struct {
-	name string
+type Node struct {
+	Name string
 }
 
-type graph struct {
-	nodes map[int]*node
-	edges map[int]map[int]int64
+type Graph struct {
+	Nodes map[int]*Node
+	Edges map[int]map[int]int64
 }
 
-func (g *graph) addNode(index int, name string) {
+func (g *Graph) AddNode(index int, name string) {
 	//	TODO
 }
 
-func (g *graph) addEdge(fromIndex, toIndex int, weight int64) {
+func (g *Graph) AddEdge(fromIndex, toIndex int, weight int64) {
 	//	TODO
 }
 
-func newGraphFromAdjacencyMatrix(am adjacencyMatrix) *graph {
-	g := &graph{}
+func NewGraphFromAdjacencyMatrix(am AdjacencyMatrix) *Graph {
+	g := &Graph{}
 	return g
 }

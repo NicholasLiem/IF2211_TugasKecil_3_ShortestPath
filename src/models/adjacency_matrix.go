@@ -1,24 +1,24 @@
 package model
 
-type adjacencyMatrix struct {
-	matrix       [][]int64
-	columnLabels []string
-	nodesCount   int
+type AdjacencyMatrix struct {
+	Matrix       [][]int64
+	ColumnLabels []string
+	NodesCount   int
 }
 
-func (am adjacencyMatrix) getNodesCount() int {
-	return am.nodesCount
+func (am AdjacencyMatrix) GetNodesCount() int {
+	return am.NodesCount
 }
 
-func newAdjacencyMatrix(nodeCount int, columnLabels []string) adjacencyMatrix {
+func NewAdjacencyMatrix(nodeCount int, columnLabels []string) AdjacencyMatrix {
 	matrix := make([][]int64, nodeCount)
 	for i := range matrix {
 		matrix[i] = make([]int64, nodeCount)
 	}
 
-	return adjacencyMatrix{
-		matrix:       matrix,
-		columnLabels: columnLabels,
-		nodesCount:   nodeCount,
+	return AdjacencyMatrix{
+		Matrix:       matrix,
+		ColumnLabels: columnLabels,
+		NodesCount:   nodeCount,
 	}
 }
