@@ -10,13 +10,21 @@ import (
 func main() {
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/calculate", calculateHandler)
+
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	http.ListenAndServe(":8080", nil)
+	// localhost
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		return
+	}
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("templates/calculate.html"))
-	tmpl.Execute(w, nil)
+	tmpl := template.Must(template.ParseFiles("templates/home.html"))
+	err := tmpl.Execute(w, nil)
+	if err != nil {
+		return
+	}
 }
 
 func calculateHandler(w http.ResponseWriter, r *http.Request) {
@@ -55,5 +63,8 @@ func calculateHandler(w http.ResponseWriter, r *http.Request) {
 		num2,
 		result,
 	}
-	tmpl.Execute(w, data)
+	err := tmpl.Execute(w, data)
+	if err != nil {
+		return
+	}
 }
