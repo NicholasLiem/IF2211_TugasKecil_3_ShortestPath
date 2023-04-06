@@ -1,7 +1,9 @@
 package models
 
 type Node struct {
-	Name string
+	Name      string
+	Latitude  float64
+	Longitude float64
 }
 
 type Graph struct {
@@ -9,11 +11,11 @@ type Graph struct {
 	Edges map[int]map[int]int64
 }
 
-func (g *Graph) AddNode(index int, name string) {
+func (g *Graph) AddNode(index int, name string, latitude, longitude float64) {
 	if g.Nodes == nil {
 		g.Nodes = make(map[int]*Node)
 	}
-	newNode := Node{name}
+	newNode := Node{Name: name, Latitude: latitude, Longitude: longitude}
 	g.Nodes[index] = &newNode
 }
 
@@ -33,7 +35,7 @@ func NewGraphFromAdjacencyMatrix(am AdjacencyMatrix) *Graph {
 		Edges: make(map[int]map[int]int64),
 	}
 	for i := 0; i < am.NodesCount; i++ {
-		g.AddNode(i, am.ColumnLabels[i])
+		g.AddNode(i, am.ColumnLabels[i], am.Latitudes[i], am.Longitudes[i])
 	}
 
 	for i := 0; i < am.NodesCount; i++ {

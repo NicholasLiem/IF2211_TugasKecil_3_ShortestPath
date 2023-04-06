@@ -8,8 +8,10 @@ import (
 
 func TestNewGraphFromAdjacencyMatrix(t *testing.T) {
 	columnLabels := []string{"A", "B", "C", "D"}
+	latitudes := []float64{13.115, 2.8, 5, 9.25}
+	longitudes := []float64{3.5, 7.45, 12.35, 15.8}
 	nodeCount := len(columnLabels)
-	adjacencyMatrix := models.NewAdjacencyMatrix(nodeCount, columnLabels)
+	adjacencyMatrix := models.NewAdjacencyMatrix(nodeCount, columnLabels, latitudes, longitudes)
 
 	adjacencyMatrix.Matrix[0][0] = 0
 	adjacencyMatrix.Matrix[0][1] = 1
@@ -34,9 +36,17 @@ func TestNewGraphFromAdjacencyMatrix(t *testing.T) {
 	graph := models.NewGraphFromAdjacencyMatrix(adjacencyMatrix)
 
 	expectedNodeNames := map[int]string{0: "A", 1: "B", 2: "C", 3: "D"}
+	expectedNodeLatitudes := map[int]float64{0: 13.115, 1: 2.8, 2: 5, 3: 9.25}
+	expectedNodeLongitudes := map[int]float64{0: 3.5, 1: 7.45, 2: 12.35, 3: 15.8}
 	for i, node := range graph.Nodes {
 		if node.Name != expectedNodeNames[i] {
 			t.Errorf("Expected node name %s but got %s", expectedNodeNames[i], node.Name)
+		}
+		if node.Latitude != expectedNodeLatitudes[i] {
+			t.Errorf("Expected node latitude %f but got %f", expectedNodeLatitudes[i], node.Latitude)
+		}
+		if node.Longitude != expectedNodeLongitudes[i] {
+			t.Errorf("Expected node longitude %f but got %f", expectedNodeLongitudes[i], node.Longitude)
 		}
 	}
 
