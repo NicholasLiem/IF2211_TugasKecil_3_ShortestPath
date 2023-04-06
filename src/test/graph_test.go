@@ -2,6 +2,8 @@ package test
 
 import (
 	"main/models"
+	"main/utils"
+	"path/filepath"
 	"reflect"
 	"testing"
 )
@@ -59,5 +61,32 @@ func TestNewGraphFromAdjacencyMatrix(t *testing.T) {
 
 	if !reflect.DeepEqual(graph.Edges, expectedEdges) {
 		t.Errorf("Expected edges %v but got %v", expectedEdges, graph.Edges)
+	}
+}
+
+func TestAdjacencyMatrixFromFile(t *testing.T) {
+	dir, err := filepath.Abs("./")
+	if err != nil {
+		t.Errorf("[ERROR] cannot get source file path")
+	}
+	adjMat, err := utils.AdjacencyMatrixFromFile(dir + "/tc1")
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+	expectedNodesCount := 3
+	expectedColumLabels := []string{"A", "B", "C"}
+	expectedLatitudes := []float64{1, 2, 3}
+	expectedLongitudes := []float64{3, 2, 1}
+	if adjMat.NodesCount != expectedNodesCount {
+		t.Errorf("Expected nodes count %d but got %d", expectedNodesCount, adjMat.NodesCount)
+	}
+	if !reflect.DeepEqual(adjMat.ColumnLabels, expectedColumLabels) {
+		t.Errorf("Expected column labels %v but got %v", expectedColumLabels, adjMat.ColumnLabels)
+	}
+	if !reflect.DeepEqual(adjMat.Latitudes, expectedLatitudes) {
+		t.Errorf("Expected latitudes %v but got %v", expectedLatitudes, adjMat.Latitudes)
+	}
+	if !reflect.DeepEqual(adjMat.Longitudes, expectedLongitudes) {
+		t.Errorf("Expected longitudes %v but got %v", expectedLongitudes, adjMat.Longitudes)
 	}
 }
