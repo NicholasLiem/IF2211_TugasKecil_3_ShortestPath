@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"main/utils"
 	"net/http"
 	"strconv"
 )
@@ -10,7 +11,7 @@ import (
 func main() {
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/calculate", calculateHandler)
-
+	utils.Hello()
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	// localhost
 	err := http.ListenAndServe(":8080", nil)

@@ -1,4 +1,4 @@
-package model
+package models
 
 type AdjacencyMatrix struct {
 	Matrix       [][]int64

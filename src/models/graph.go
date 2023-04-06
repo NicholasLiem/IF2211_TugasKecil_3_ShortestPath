@@ -1,4 +1,4 @@
-package model
+package models
 
 type Node struct {
 	Name string
@@ -10,14 +10,41 @@ type Graph struct {
 }
 
 func (g *Graph) AddNode(index int, name string) {
-	//	TODO
+	if g.Nodes == nil {
+		g.Nodes = make(map[int]*Node)
+	}
+	newNode := Node{name}
+	g.Nodes[index] = &newNode
 }
 
 func (g *Graph) AddEdge(fromIndex, toIndex int, weight int64) {
-	//	TODO
+	if g.Edges == nil {
+		g.Edges = make(map[int]map[int]int64)
+	}
+	if _, ok := g.Edges[toIndex]; !ok {
+		g.Edges[toIndex] = make(map[int]int64)
+	}
+	g.Edges[toIndex][fromIndex] = weight
 }
 
 func NewGraphFromAdjacencyMatrix(am AdjacencyMatrix) *Graph {
-	g := &Graph{}
+	g := &Graph{
+		Nodes: make(map[int]*Node),
+		Edges: make(map[int]map[int]int64),
+	}
+	for i := 0; i < am.NodesCount; i++ {
+		g.AddNode(i, am.ColumnLabels[i])
+	}
+
+	for i := 0; i < am.NodesCount; i++ {
+		for j := 0; j < i; j++ {
+			if am.Matrix[i][j] == 0 {
+				continue
+			} else {
+				g.AddEdge(i, j, am.Matrix[i][j])
+				g.AddEdge(j, i, am.Matrix[i][j])
+			}
+		}
+	}
 	return g
 }
