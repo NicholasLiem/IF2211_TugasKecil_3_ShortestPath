@@ -22,7 +22,7 @@ func NewAdjacencyMatrix(nodeCount int, columnLabels []string, latitudes, longitu
 		Matrix:       matrix,
 		ColumnLabels: columnLabels,
 		NodesCount:   nodeCount,
-		Latitudes:    latitudes[:len(columnLabels)],
+		Latitudes:    latitudes,
 		Longitudes:   longitudes,
 	}
 }
