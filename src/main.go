@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/utils"
 	"html/template"
-	"main/utils"
 	"net/http"
 	"strconv"
 )
