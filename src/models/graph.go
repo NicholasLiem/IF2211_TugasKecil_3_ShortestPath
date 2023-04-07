@@ -1,6 +1,7 @@
 package models
 
 type Node struct {
+	Index     int
 	Name      string
 	Latitude  float64
 	Longitude float64
@@ -15,7 +16,7 @@ func (g *Graph) AddNode(index int, name string, latitude, longitude float64) {
 	if g.Nodes == nil {
 		g.Nodes = make(map[int]*Node)
 	}
-	newNode := Node{Name: name, Latitude: latitude, Longitude: longitude}
+	newNode := Node{Index: index, Name: name, Latitude: latitude, Longitude: longitude}
 	g.Nodes[index] = &newNode
 }
 
@@ -49,4 +50,27 @@ func NewGraphFromAdjacencyMatrix(am AdjacencyMatrix) *Graph {
 		}
 	}
 	return g
+}
+
+func (g *Graph) GetEdgeWeight(indexSource, indexDestination int) int64 {
+	if _, ok := g.Edges[indexSource]; !ok {
+		return -1
+	}
+	if weight, ok := g.Edges[indexSource][indexDestination]; ok {
+		return weight
+	}
+	return -1
+}
+
+func (g *Graph) GetNeighbors(index int) []int {
+	if _, ok := g.Nodes[index]; !ok {
+		return []int{}
+	}
+	var neighbors []int
+	if edges, ok := g.Edges[index]; ok {
+		for nodeIndex := range edges {
+			neighbors = append(neighbors, nodeIndex)
+		}
+	}
+	return neighbors
 }
