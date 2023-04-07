@@ -1,8 +1,8 @@
 package test
 
 import (
-	"main/models"
-	"main/utils"
+	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/models"
+	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/utils"
 	"path/filepath"
 	"reflect"
 	"testing"
