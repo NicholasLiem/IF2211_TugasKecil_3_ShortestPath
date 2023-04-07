@@ -1,55 +1,71 @@
 package models
 
-//source: official documentation from Go https://pkg.go.dev/github.com/jupp0r/go-priority-queue
-
-import (
-	"container/heap"
-)
-
-// An Item is something we manage in a priority queue.
-type Item struct {
-	Value    *Node // The value of the item; a pointer to a Node struct.
-	Priority int64 // The priority of the item in the queue.
-	// The index is needed by update and is maintained by the heap.Interface methods.
-	Index int // The index of the item in the heap.
+type pqNode[T interface{}] struct {
+	value T
+	next  *pqNode[T]
 }
 
-// A PriorityQueue implements heap.Interface and holds Items.
-type PriorityQueue []*Item
-
-func (pq PriorityQueue) Len() int { return len(pq) }
-
-func (pq PriorityQueue) Less(i, j int) bool {
-	// We want Pop to give us the highest, not lowest, priority so we use greater than here.
-	return pq[i].Priority < pq[j].Priority
+type PriorityQueue[T interface{}] struct {
+	head         *pqNode[T]
+	priorityFunc func(T) int
+	size         int
 }
 
-func (pq PriorityQueue) Swap(i, j int) {
-	pq[i], pq[j] = pq[j], pq[i]
-	pq[i].Index = i
-	pq[j].Index = j
+func NewPriorityQueue[T interface{}](byPriority func(T) int) PriorityQueue[T] {
+	return PriorityQueue[T]{
+		head:         nil,
+		priorityFunc: byPriority,
+		size:         0,
+	}
 }
 
-func (pq *PriorityQueue) Push(x interface{}) {
-	n := len(*pq)
-	item := x.(*Item)
-	item.Index = n
-	*pq = append(*pq, item)
+func (pq PriorityQueue[T]) Size() int {
+	return pq.size
 }
 
-func (pq *PriorityQueue) Pop() interface{} {
-	old := *pq
-	n := len(old)
-	item := old[n-1]
-	old[n-1] = nil  // avoid memory leak
-	item.Index = -1 // for safety
-	*pq = old[0 : n-1]
-	return item
+func (pq PriorityQueue[T]) IsEmpty() bool {
+	return pq.size == 0
 }
 
-// update modifies the Priority and value of an Item in the queue.
-func (pq *PriorityQueue) update(item *Item, value *Node, Priority int64) {
-	item.Value = value
-	item.Priority = Priority
-	heap.Fix(pq, item.Index)
+func (pq *PriorityQueue[T]) Enqueue(value T) {
+	if pq.IsEmpty() {
+		pq.head = &pqNode[T]{value: value, next: nil}
+	} else {
+		var pred *pqNode[T] = nil
+		p := pq.head
+		for p != nil {
+			if pq.priorityFunc(value) >= pq.priorityFunc(p.value) {
+				break
+			} else {
+				pred = p
+				p = p.next
+			}
+		}
+		if pred == nil {
+			pq.head = &pqNode[T]{value: value, next: pq.head}
+		} else {
+			pred.next = &pqNode[T]{value: value, next: p}
+		}
+	}
+	pq.size++
+}
+
+func (pq *PriorityQueue[T]) Dequeue() T {
+	if pq.IsEmpty() {
+		panic("Priority queue is empty") // again, this is actually dangerous
+	}
+	val := pq.head.value
+	pq.head = pq.head.next // no need to free memory, thanks to garbage collector
+	pq.size--
+	return val
+}
+
+func (pq PriorityQueue[T]) GetItems() []T {
+	items := make([]T, pq.size)
+	p := pq.head
+	for i := range items {
+		items[i] = p.value
+		p = p.next
+	}
+	return items
 }
