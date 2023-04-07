@@ -1,33 +1,37 @@
 package models
 
-type pqNode[T interface{}] struct {
+type pqNode[T any] struct {
 	value T
 	next  *pqNode[T]
 }
 
-type PriorityQueue[T interface{}] struct {
+type number interface {
+	int | int8 | int32 | int64 | uint | uint8 | uint32 | uint64 | float32 | float64
+}
+
+type PriorityQueue[T any, U number] struct {
 	head         *pqNode[T]
-	priorityFunc func(T) int
+	priorityFunc func(T) U
 	size         int
 }
 
-func NewPriorityQueue[T interface{}](byPriority func(T) int) PriorityQueue[T] {
-	return PriorityQueue[T]{
+func NewPriorityQueue[T any, U number](byPriority func(T) U) PriorityQueue[T, U] {
+	return PriorityQueue[T, U]{
 		head:         nil,
 		priorityFunc: byPriority,
 		size:         0,
 	}
 }
 
-func (pq PriorityQueue[T]) Size() int {
+func (pq PriorityQueue[T, U]) Size() int {
 	return pq.size
 }
 
-func (pq PriorityQueue[T]) IsEmpty() bool {
+func (pq PriorityQueue[T, U]) IsEmpty() bool {
 	return pq.size == 0
 }
 
-func (pq *PriorityQueue[T]) Enqueue(value T) {
+func (pq *PriorityQueue[T, U]) Enqueue(value T) {
 	if pq.IsEmpty() {
 		pq.head = &pqNode[T]{value: value, next: nil}
 	} else {
@@ -50,7 +54,7 @@ func (pq *PriorityQueue[T]) Enqueue(value T) {
 	pq.size++
 }
 
-func (pq *PriorityQueue[T]) Dequeue() T {
+func (pq *PriorityQueue[T, U]) Dequeue() T {
 	if pq.IsEmpty() {
 		panic("Priority queue is empty") // again, this is actually dangerous
 	}
@@ -60,7 +64,7 @@ func (pq *PriorityQueue[T]) Dequeue() T {
 	return val
 }
 
-func (pq PriorityQueue[T]) GetItems() []T {
+func (pq PriorityQueue[T, U]) GetItems() []T {
 	items := make([]T, pq.size)
 	p := pq.head
 	for i := range items {

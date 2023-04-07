@@ -4,15 +4,11 @@ import (
 	"math"
 )
 
-type info struct {
+type astarnode struct {
 	nodeIndex int
 	f         float64
 	g         float64
 	trace     []int
-}
-
-func byPriority(value info) int {
-	return -int(value.f)
 }
 
 func distance(lat1, lon1, lat2, lon2 float64) float64 {
@@ -38,9 +34,11 @@ func calculateH(graph Graph, current, destination int) float64 {
 }
 
 func AStarSearch(graph Graph, src, dest int) ([]int, int64) {
-	pq := NewPriorityQueue(byPriority)
+	pq := NewPriorityQueue(func(value astarnode) float64 {
+		return -value.f
+	})
 
-	pq.Enqueue(info{nodeIndex: src, f: 0, g: 0, trace: []int{src}})
+	pq.Enqueue(astarnode{nodeIndex: src, f: 0, g: 0, trace: []int{src}})
 
 	visited := map[int]bool{}
 
@@ -54,7 +52,7 @@ func AStarSearch(graph Graph, src, dest int) ([]int, int64) {
 
 		for neighbour, distance := range graph.Edges[curr.nodeIndex] {
 			if !visited[neighbour] {
-				x := info{}
+				x := astarnode{}
 				x.nodeIndex = neighbour
 				x.g = curr.g + float64(distance)
 				x.f = x.g + calculateH(graph, curr.nodeIndex, dest)
