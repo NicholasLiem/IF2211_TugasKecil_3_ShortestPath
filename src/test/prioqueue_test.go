@@ -1,34 +1,34 @@
 package test
 
 import (
-	"container/heap"
 	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/models"
 	"testing"
 )
 
+func byPriority(node models.Node) int {
+	return len(node.Name)
+}
+
 func TestPriorityQueue(t *testing.T) {
-	pq := models.PriorityQueue{}
+	pq := models.NewPriorityQueue(byPriority)
 
-	item1 := &models.Item{Value: &models.Node{Name: "Node 1"}, Priority: 3}
-	heap.Push(&pq, item1)
+	node1 := models.Node{Name: "Arad"}
+	node2 := models.Node{Name: "Bucharest"}
+	node3 := models.Node{Name: "Sibiu"}
+	node4 := models.Node{Name: "Pitesti"}
 
-	item2 := &models.Item{Value: &models.Node{Name: "Node 2"}, Priority: 1}
-	heap.Push(&pq, item2)
+	pq.Enqueue(node1)
+	pq.Enqueue(node2)
+	pq.Enqueue(node3)
+	pq.Enqueue(node4)
 
-	item3 := &models.Item{Value: &models.Node{Name: "Node 3"}, Priority: 2}
-	heap.Push(&pq, item3)
-
-	expectedOrder := []*models.Item{item2, item3, item1}
+	expectedOrder := []models.Node{node2, node4, node3, node1}
 
 	for _, expectedItem := range expectedOrder {
-		item := heap.Pop(&pq).(*models.Item)
+		item := pq.Dequeue()
 
-		if item.Priority != expectedItem.Priority {
-			t.Errorf("Expected item with priority %d, but got %d", expectedItem.Priority, item.Priority)
-		}
-
-		if item.Value.Name != expectedItem.Value.Name {
-			t.Errorf("Expected item with value %s, but got %s", expectedItem.Value.Name, item.Value.Name)
+		if item.Name != expectedItem.Name {
+			t.Errorf("Expected node name %s, but got %s", expectedItem.Name, item.Name)
 		}
 	}
 }
