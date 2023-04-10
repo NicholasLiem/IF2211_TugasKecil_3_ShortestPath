@@ -16,7 +16,7 @@ func Hello() {
 // TODO: proper parser
 
 func parseNode(line string) (string, float64, float64, error) {
-	words := strings.Split(line, " ")
+	words := strings.Split(line, ",")
 	name := strings.TrimSpace(words[0])
 	latitude, ok := strconv.ParseFloat(strings.TrimSpace(words[1]), 64)
 	if ok != nil {
@@ -30,7 +30,7 @@ func parseNode(line string) (string, float64, float64, error) {
 }
 
 func parseRow(line string, columns int) ([]int64, error) {
-	words := strings.Split(line, " ")
+	words := strings.Split(line, ",")
 	row := make([]int64, columns)
 	var ok error
 	for i := range row {
