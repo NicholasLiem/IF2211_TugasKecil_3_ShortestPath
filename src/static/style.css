@@ -24,3 +24,111 @@
     grid-column: 2 / 3;
     grid-row: 2 / 3;
 }
+
+:root {
+    --primary: #0062cc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.base-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    color: white;
+}
+
+.left {
+    width: 30%;
+    height: 100%;
+}
+
+.right {
+    width: 70%;
+    height: 100%;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 50%;
+    text-align: center;
+    padding: 20% 10%;
+    font-family: "Poppins", sans-serif;
+}
+
+.text > .title {
+    font-size: 50px;
+}
+
+.text > .subtitle {
+    font-size: 18px;
+}
+
+.file-section {
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.choose-file {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    background-color: var(--primary);
+    color: white;
+    padding: 8px;
+    border-radius: 30px;
+    border-style: none;
+}
+
+.choose-file:hover {
+    filter: brightness(95%);
+    cursor: pointer;
+}
+
+.choose-file:active {
+    transform: scale(90%);
+}
+
+.alternative {
+    margin: 10px;
+}
+
+.alternative > .maps {
+    display: inline-block;
+    color: #FFAA33;
+    text-decoration: underline;
+}
+
+.alternative > .maps:hover {
+    cursor: pointer;
+}
+
+.alternative > .maps:active {
+    transform: scale(95%);
+}
+
+.background {
+    background-color: #111;
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    z-index: -99;
+}
+
+#visualizer {
+    width: 100%;
+    height: 100%;
+    display: block;
+    /*   background-color: #fff; */
+}
