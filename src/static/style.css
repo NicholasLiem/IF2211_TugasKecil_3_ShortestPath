@@ -1,6 +1,6 @@
 :root {
     --primary: #0062cc;
-    --secondary: #FF8F00;
+    --secondary: #ff8f00;
     --error: #f13225;
     --text: #FFFFFF;
 }
@@ -243,7 +243,6 @@ button:active {
 
 .node-control > p {
     flex-grow: 1;
-    text-align: center;
     margin-left: 10px;
     margin-right: 10px;
 }

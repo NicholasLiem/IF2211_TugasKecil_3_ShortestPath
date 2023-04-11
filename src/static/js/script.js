@@ -1,9 +1,16 @@
-const visualizer = document.getElementById("visualizer");
-const ctx = visualizer.getContext("2d");
-const nodeRadius = 7;
-const coords = [];
-let graph;
-let onhover = -1;
+const visualizer = document.getElementById("visualizer"),
+    ctx = visualizer.getContext("2d"),
+    nodeRadius = 7,
+    coords = [],
+    srcBtn = document.getElementById("src-btn"),
+    dstBtn = document.getElementById("dst-btn"),
+    srcName = document.getElementById("src-name"),
+    dstName = document.getElementById("dst-name");
+let graph,
+    onHover = -1,
+    inChoose = "",
+    src = -1,
+    dst = -1;
 
 class Node {
     constructor({index, name, latitude, longitude}) {
@@ -56,9 +63,10 @@ class Graph {
             }
         }
         for (const [idx, [x, y]] of coords.entries()) {
-            const radius = nodeRadius + (onhover === idx ? 3 : 0);
+            const radius = nodeRadius + (onHover === idx ? 3 : 0);
             drawText(this.nodes[idx].name, x, y - radius - 10, ctx);
-            drawCircle(x, y, radius, ctx);
+            const color = src === idx || dst === idx ? "#0062cc" : "#fff"
+            drawCircle(x, y, radius, color, ctx);
         }
     }
 }
@@ -74,9 +82,9 @@ function getMousePos(canvas, evt) {
     };
 }
 
-function drawCircle(x, y, radius, ctx) {
+function drawCircle(x, y, radius, color, ctx) {
     ctx.beginPath();
-    ctx.fillStyle = "#fff"
+    ctx.fillStyle = color;
     ctx.arc(x, y, radius, 0, 2 * Math.PI);
     ctx.fill();
 }
@@ -105,22 +113,50 @@ visualizer.addEventListener("mousemove", ev => {
     const pos = getMousePos(visualizer, ev)
     if (graph) {
         for (const [idx, [x, y]] of coords.entries()) {
-            const radius = nodeRadius + (onhover === idx ? 5 : 0);
+            const radius = nodeRadius + (onHover === idx ? 5 : 0);
             if (pos.x >= x - radius && pos.x <= x + radius && pos.y >= y - radius && pos.y <= y + radius) {
                 visualizer.style.cursor = "pointer";
-                if (onhover !== idx) {
-                    onhover = idx;
+                if (onHover !== idx) {
+                    onHover = idx;
                     ctx.clearRect(0, 0, visualizer.width, visualizer.height);
                     graph.draw(visualizer);
                 }
                 break;
             } else {
-                if (onhover !== -1) {
-                    onhover = -1;
+                if (onHover !== -1) {
+                    onHover = -1;
                     ctx.clearRect(0, 0, visualizer.width, visualizer.height);
                     graph.draw(visualizer);
                 }
                 visualizer.style.cursor = "default";
+            }
+        }
+    }
+});
+
+visualizer.addEventListener("mousedown", ev => {
+    const pos = getMousePos(visualizer, ev)
+    if (graph) {
+        for (const [idx, [x, y]] of coords.entries()) {
+            const radius = nodeRadius + (onHover === idx ? 5 : 0);
+            if (pos.x >= x - radius && pos.x <= x + radius && pos.y >= y - radius && pos.y <= y + radius) {
+                if (inChoose) {
+                    if (inChoose === "src") {
+                        src = idx;
+                        srcBtn.style.filter = "brightness(100%)";
+                        srcBtn.style.transform = "scale(100%)";
+                        srcName.innerText = graph.nodes[idx].name;
+                    } else {
+                        dst = idx;
+                        dstBtn.style.filter = "brightness(100%)";
+                        dstBtn.style.transform = "scale(100%)";
+                        dstName.innerText = graph.nodes[idx].name;
+                    }
+                    ctx.clearRect(0, 0, visualizer.width, visualizer.height);
+                    graph.draw(visualizer);
+                    inChoose = "";
+                }
+                break;
             }
         }
     }
@@ -143,7 +179,6 @@ function displayError(message) {
 
 function hideError() {
     const error = document.getElementById("error")
-    const canvas = document.getElementById("visualizer")
     error.style.visibility = "hidden"
 }
 
@@ -191,3 +226,19 @@ window.onload = function () {
         connectParticles: true,
     });
 };
+
+srcBtn.addEventListener("mousedown", (e) => {
+    srcBtn.style.transform = "scale(95%)";
+    srcBtn.style.filter = "brightness(95%)"
+    inChoose = "src";
+    dstBtn.style.transform = "scale(100%)";
+    dstBtn.style.filter = "brightness(100%)";
+})
+
+dstBtn.addEventListener("mousedown", (e) => {
+    dstBtn.style.transform = "scale(95%)";
+    dstBtn.style.filter = "brightness(95%)"
+    inChoose = "dst";
+    srcBtn.style.transform = "scale(100%)";
+    srcBtn.style.filter = "brightness(100%)";
+})
