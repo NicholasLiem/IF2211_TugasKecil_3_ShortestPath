@@ -6,11 +6,13 @@ const visualizer = document.getElementById("visualizer"),
     dstBtn = document.getElementById("dst-btn"),
     srcName = document.getElementById("src-name"),
     dstName = document.getElementById("dst-name");
+
 let graph,
     onHover = -1,
     inChoose = "",
     src = -1,
-    dst = -1;
+    dst = -1,
+    route = [];
 
 class Node {
     constructor({index, name, latitude, longitude}) {
@@ -21,8 +23,18 @@ class Node {
     }
 }
 
+function exists(arrayNx2, element) {
+    for (const [a, b] of arrayNx2) {
+        if (a === element[0] && b === element[1]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 class Graph {
     constructor({nodes, edges}) {
+        this.nodesOrigin = nodes;
         this.nodes = [];
         for (let i = 0; i < Object.keys(nodes).length; i++) {
             const item = nodes[i];
@@ -52,10 +64,11 @@ class Graph {
         const drawn = [];
         for (const [from, edges] of Object.entries(this.edges)) {
             for (const [to, weight] of Object.entries(edges)) {
-                if (!([from, to] in drawn)) {
+                if (!exists(drawn, [from, to])) {
                     const [x1, y1] = coords[from];
                     const [x2, y2] = coords[to];
-                    drawLine(x1, y1, x2, y2, ctx);
+                    const color = exists(route, [from, to]) ? "#ff8f00" : "#a0aaef";
+                    drawLine(x1, y1, x2, y2, color, ctx);
                     drawText(weight.toString(), (x1 + x2) / 2 - 10, (y1 + y2) / 2 - 10, ctx);
                     drawn.push([from, to]);
                     drawn.push([to, from]);
@@ -96,9 +109,9 @@ function drawText(text, x, y, ctx) {
     ctx.fillText(text, x, y)
 }
 
-function drawLine(x1, y1, x2, y2, ctx) {
+function drawLine(x1, y1, x2, y2, color, ctx) {
     ctx.beginPath();
-    ctx.strokeStyle = "#a0aaef"
+    ctx.strokeStyle = color;
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.stroke();
@@ -145,11 +158,13 @@ visualizer.addEventListener("mousedown", ev => {
                         src = idx;
                         srcBtn.style.filter = "brightness(100%)";
                         srcBtn.style.transform = "scale(100%)";
+                        srcBtn.style.border = "0 none transparent";
                         srcName.innerText = graph.nodes[idx].name;
                     } else {
                         dst = idx;
                         dstBtn.style.filter = "brightness(100%)";
                         dstBtn.style.transform = "scale(100%)";
+                        dstBtn.style.border = "0 none transparent";
                         dstName.innerText = graph.nodes[idx].name;
                     }
                     ctx.clearRect(0, 0, visualizer.width, visualizer.height);
@@ -193,10 +208,11 @@ function parseFile(file) {
         fetch("http://localhost:8080/parse", {
             method: "POST",
             body: e.target.result
-        }).then((response) => {
+        }).then(async (response) => {
             if (response.ok) {
-                if (response.status === 204) {
-                    throw new Error("Failed to parse file");
+                if (response.status === 500) {
+                    console.log(response);
+                    throw new Error("Failed to parse file: " + await response.text());
                 }
                 return response.json();
             }
@@ -227,18 +243,73 @@ window.onload = function () {
     });
 };
 
-srcBtn.addEventListener("mousedown", (e) => {
+srcBtn.addEventListener("mousedown", (_) => {
     srcBtn.style.transform = "scale(95%)";
     srcBtn.style.filter = "brightness(95%)"
+    srcBtn.style.border = "1px solid white";
     inChoose = "src";
     dstBtn.style.transform = "scale(100%)";
     dstBtn.style.filter = "brightness(100%)";
-})
+    dstBtn.style.border = "0 none transparent";
+});
 
-dstBtn.addEventListener("mousedown", (e) => {
+dstBtn.addEventListener("mousedown", (_) => {
     dstBtn.style.transform = "scale(95%)";
     dstBtn.style.filter = "brightness(95%)"
+    dstBtn.style.border = "1px solid white";
     inChoose = "dst";
     srcBtn.style.transform = "scale(100%)";
     srcBtn.style.filter = "brightness(100%)";
-})
+    srcBtn.style.border = "0 none transparent";
+});
+
+document.getElementById("calculate-button").addEventListener("mousedown", (_) => {
+    srcBtn.style.filter = "brightness(100%)";
+    srcBtn.style.transform = "scale(100%)";
+    srcBtn.style.border = "0 none transparent";
+    dstBtn.style.filter = "brightness(100%)";
+    dstBtn.style.transform = "scale(100%)";
+    dstBtn.style.border = "0 none transparent";
+    if (src === -1) {
+        displayError("No source selected")
+        return
+    }
+    if (dst === -1) {
+        displayError("No destination selected")
+        return
+    }
+    const method = document.getElementById("algorithm").value;
+    if (!method) {
+        displayError("No algorithm selected")
+        return
+    }
+    const body = {
+        graph: {
+            Nodes: graph.nodesOrigin,
+            Edges: graph.edges
+        },
+        src,
+        dst,
+        method
+    }
+    fetch("http://localhost:8080/search", {
+        method: "POST", body: JSON.stringify(body)
+    }).then(async (response) => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error("Failed to search path: " + await response.text());
+    }).then(async (responseJson) => {
+        route = [];
+        const {Route, Cost} = await responseJson;
+        for (let i = 0; i < Route.length - 1; i++) {
+            const from = Route[i].toString();
+            const to = Route[i + 1].toString();
+            route.push(...[[from, to], [to, from]])
+        }
+        ctx.clearRect(0, 0, visualizer.width, visualizer.height);
+        graph.draw(visualizer);
+    }).catch((error) => {
+        displayError(error.message);
+    });
+});

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/models"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -21,7 +22,10 @@ func ParseHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	mat, err := models.ParseToAdjacencyMatrix(string(decodedData))
 	if err != nil {
-		w.WriteHeader(http.StatusNoContent)
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println(err.Error())
+		_, _ = w.Write([]byte(err.Error()))
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -29,7 +33,10 @@ func ParseHandler(w http.ResponseWriter, r *http.Request) {
 	graph := models.NewGraphFromAdjacencyMatrix(mat)
 	err = json.NewEncoder(w).Encode(graph)
 	if err != nil {
-		w.WriteHeader(http.StatusNoContent)
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println(err.Error())
+		_, _ = w.Write([]byte(err.Error()))
 		return
 	}
 }

@@ -44,28 +44,40 @@
     <div id="right">
         <canvas id="visualizer"></canvas>
         <div id="controls">
-            <div class="node-control">
-                <p id="src-name" style="text-align: right;">
-                    No source chosen
-                </p>
-                <button class="primary-button" id="src-btn">
-                    Choose source
-                </button>
+            <div class="control-section">
+                <div class="node-control">
+                    <p id="src-name" style="text-align: right;">
+                        No source selected
+                    </p>
+                    <button class="primary-button" id="src-btn">
+                        Select source
+                    </button>
+                </div>
+                <div id="calculate">
+                    <button id="calculate-button">
+                          <span class="material-symbols-outlined">
+                            travel_explore
+                          </span>
+                    </button>
+                </div>
+                <div class="node-control">
+                    <button class="primary-button" id="dst-btn">
+                        Select destination
+                    </button>
+                    <p id="dst-name" style="text-align: left">
+                        No destination selected
+                    </p>
+                </div>
             </div>
-            <div id="calculate">
-                <button id="calculate-button">
-          <span class="material-symbols-outlined">
-            travel_explore
-          </span>
-                </button>
-            </div>
-            <div class="node-control">
-                <button class="primary-button" id="dst-btn">
-                    Choose destination
-                </button>
-                <p id="dst-name" style="text-align: left">
-                    No destination chosen
-                </p>
+            <div class="control-section">
+                <div class="algorithms">
+                    <label for="algorithm"></label>
+                    <select name="algorithm" id="algorithm">
+                        <option value="" disabled selected>Select Algorithm</option>
+                        <option value="a*">A* Algorithm</option>
+                        <option value="ucs">UCS Algorithm</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
