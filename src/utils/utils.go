@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"errors"
 	"fmt"
 	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/models"
 	"os"
@@ -12,70 +11,91 @@ import (
 func Hello() {
 	fmt.Println("Hello")
 }
-
-// TODO: proper parser
-
 func parseNode(line string) (string, float64, float64, error) {
-	words := strings.Split(line, " ")
+	words := strings.Fields(line)
+	if len(words) != 3 {
+		return "", 0, 0, fmt.Errorf("invalid number of fields (%d)", len(words))
+	}
+
 	name := strings.TrimSpace(words[0])
-	latitude, ok := strconv.ParseFloat(strings.TrimSpace(words[1]), 64)
-	if ok != nil {
-		return "", 0, 0, errors.New("cannot parse latitude (" + ok.Error() + ")")
+
+	latitude, err := strconv.ParseFloat(strings.TrimSpace(words[1]), 64)
+	if err != nil {
+		return "", 0, 0, fmt.Errorf("cannot parse latitude (%w)", err)
 	}
-	longitude, ok := strconv.ParseFloat(strings.TrimSpace(words[2]), 64)
-	if ok != nil {
-		return "", 0, 0, errors.New("cannot parse longitude (" + ok.Error() + ")")
+
+	longitude, err := strconv.ParseFloat(strings.TrimSpace(words[2]), 64)
+	if err != nil {
+		return "", 0, 0, fmt.Errorf("cannot parse longitude (%w)", err)
 	}
+
 	return name, latitude, longitude, nil
 }
 
-func parseRow(line string, columns int) ([]int64, error) {
-	words := strings.Split(line, " ")
-	row := make([]int64, columns)
-	var ok error
-	for i := range row {
-		row[i], ok = strconv.ParseInt(strings.TrimSpace(words[i]), 10, 32)
-		if ok != nil {
-			return []int64{}, errors.New("cannot parse column (" + ok.Error() + ")")
-		}
+func parseRow(line string, columns int) ([]float64, error) {
+	words := strings.Fields(line)
+	if len(words) != columns {
+		return nil, fmt.Errorf("invalid number of columns (%d), expected %d", len(words), columns)
 	}
+
+	row := make([]float64, columns)
+	for i, word := range words {
+		val, err := strconv.ParseFloat(word, 64)
+		if err != nil {
+			return nil, fmt.Errorf("cannot parse column %d (%w)", i+1, err)
+		}
+		row[i] = val
+	}
+
 	return row, nil
 }
 
 func AdjacencyMatrixFromFile(filepath string) (*models.AdjacencyMatrix, error) {
-	buf, ok := os.ReadFile(filepath)
-	if ok != nil {
-		msg := fmt.Sprintf("[ERROR] cannot read file %s (%s)", filepath, ok.Error())
-		return nil, errors.New(msg)
+	buf, err := os.ReadFile(filepath)
+	if err != nil {
+		return nil, fmt.Errorf("cannot read file %s (%w)", filepath, err)
 	}
 	lines := strings.Split(string(buf), "\n")
-	count, ok := strconv.ParseInt(strings.TrimSpace(lines[0]), 10, 32)
-	if ok != nil {
-		msg := fmt.Sprintf("[ERROR] cannot parse node count (%s) at %s:1", ok.Error(), filepath)
-		return nil, errors.New(msg)
+	if len(lines) < 3 {
+		return nil, fmt.Errorf("invalid file format: expected at least 3 lines, got %d", len(lines))
 	}
+
+	count, err := strconv.ParseInt(strings.TrimSpace(lines[0]), 10, 32)
+	if err != nil {
+		return nil, fmt.Errorf("cannot parse node count (%w) at %s:1", err, filepath)
+	}
+
 	columnLabels := make([]string, count)
 	latitudes := make([]float64, count)
 	longitudes := make([]float64, count)
-	for i := 0; i < len(columnLabels); i++ {
-		label, latitude, longitude, ok := parseNode(lines[i+1])
-		if ok != nil {
-			msg := fmt.Sprintf("[ERROR] %s at %s:%d", ok.Error(), filepath, i+1)
-			return nil, errors.New(msg)
+
+	for i := 0; i < int(count); i++ {
+		name, lat, lon, err := parseNode(lines[i+1])
+		if err != nil {
+			return nil, fmt.Errorf("%w at %s:%d", err, filepath, i+2)
 		}
-		columnLabels[i] = label
-		latitudes[i] = latitude
-		longitudes[i] = longitude
+
+		columnLabels[i] = name
+		latitudes[i] = lat
+		longitudes[i] = lon
 	}
-	matrix := make([][]int64, count)
-	for i := 0; i < len(matrix); i++ {
-		matrix[i], ok = parseRow(lines[i+int(count)+1], int(count))
-		if ok != nil {
-			msg := fmt.Sprintf("[ERROR] %s at %s:%d", ok.Error(), filepath, i+int(count)+1)
-			return nil, errors.New(msg)
+
+	matrix := make([][]float64, count)
+
+	for i := 0; i < int(count); i++ {
+		row, err := parseRow(lines[i+int(count)+1], int(count))
+		if err != nil {
+			return nil, fmt.Errorf("%w at %s:%d", err, filepath, i+int(count)+2)
+		}
+
+		matrix[i] = make([]float64, count)
+		for j, val := range row {
+			matrix[i][j] = float64(val)
 		}
 	}
+
 	res := models.NewAdjacencyMatrix(int(count), columnLabels, latitudes, longitudes)
 	res.Matrix = matrix
+
 	return &res, nil
 }
