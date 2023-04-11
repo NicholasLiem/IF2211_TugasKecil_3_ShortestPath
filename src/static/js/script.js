@@ -35,11 +35,11 @@ class Graph {
 
     draw(canvas) {
         const ctx = canvas.getContext("2d");
-        const width = canvas.width * 0.7;
-        const height = canvas.height * 0.7;
+        const width = canvas.width * 0.9;
+        const height = canvas.height * 0.9;
         for (const [idx, node] of this.nodes.entries()) {
-            const x = canvas.width * 0.15 + (node.longitude - this.minLon) / (this.maxLon - this.minLon) * width;
-            const y = canvas.height * 0.15 + (node.latitude - this.minLat) / (this.maxLat - this.minLat) * height;
+            const x = canvas.width * 0.05 + (node.longitude - this.minLon) / (this.maxLon - this.minLon) * width;
+            const y = canvas.height * 0.05 + (node.latitude - this.minLat) / (this.maxLat - this.minLat) * height;
             coords[idx] = [x, y];
         }
         const drawn = [];
@@ -96,8 +96,8 @@ function drawLine(x1, y1, x2, y2, ctx) {
     ctx.stroke();
 }
 
-visualizer.style.width = '100%';
-visualizer.style.height = '100%';
+visualizer.style.width = "100%";
+visualizer.style.height = "80%";
 visualizer.width = visualizer.offsetWidth;
 visualizer.height = visualizer.offsetHeight;
 
@@ -144,8 +144,12 @@ function displayError(message) {
 function hideError() {
     const error = document.getElementById("error")
     const canvas = document.getElementById("visualizer")
-    canvas.style.backgroundColor = "#111"
     error.style.visibility = "hidden"
+}
+
+function displayControls() {
+    const controls = document.getElementById("controls");
+    controls.style.visibility = "visible";
 }
 
 function parseFile(file) {
@@ -157,23 +161,23 @@ function parseFile(file) {
         }).then((response) => {
             if (response.ok) {
                 if (response.status === 204) {
-                    throw new Error("Failed to parse file")
+                    throw new Error("Failed to parse file");
                 }
-                return response.json()
+                return response.json();
             }
-            throw new Error("Failed to upload file")
+            throw new Error("Failed to upload file");
         }).then(async (responseJson) => {
-            hideError()
-            const {Nodes, Edges} = await responseJson
+            hideError();
+            const {Nodes, Edges} = await responseJson;
             graph = new Graph({
                 nodes: Nodes,
                 edges: Edges,
-            })
-            console.log(graph)
-            ctx.clearRect(0, 0, visualizer.width, visualizer.height)
-            graph.draw(visualizer)
+            });
+            ctx.clearRect(0, 0, visualizer.width, visualizer.height);
+            graph.draw(visualizer);
+            displayControls();
         }).catch((error) => {
-            displayError(error.message)
+            displayError(error.message);
         })
     }
     reader.readAsDataURL(file);
