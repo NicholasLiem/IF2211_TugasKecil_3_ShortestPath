@@ -69,7 +69,7 @@ func TestAdjacencyMatrixFromFile(t *testing.T) {
 	if err != nil {
 		t.Errorf("[ERROR] cannot get source file path")
 	}
-	adjMat, err := utils.AdjacencyMatrixFromFile(dir + "/tc1")
+	adjMat, err := utils.AdjacencyMatrixFromFile(dir + "/tc1.txt")
 	if err != nil {
 		t.Errorf(err.Error())
 	}

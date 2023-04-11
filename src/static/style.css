@@ -41,6 +41,7 @@
     display: flex;
     flex-direction: row;
     color: white;
+    font-family: "Poppins", sans-serif;
 }
 
 .left {
@@ -61,7 +62,6 @@
     height: 50%;
     text-align: center;
     padding: 20% 10%;
-    font-family: "Poppins", sans-serif;
 }
 
 .text > .title {
@@ -127,8 +127,19 @@
 }
 
 #visualizer {
-    width: 100%;
-    height: 100%;
     display: block;
     /*   background-color: #fff; */
+}
+
+#error {
+    visibility: hidden;
+    margin-top: 20px;
+    font-size: 1.05em;
+    color: #f13225;
+}
+
+#error > .icon {
+    font-size: 0.9em;
+    display: inline;
+    vertical-align: baseline;
 }
