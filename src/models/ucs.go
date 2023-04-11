@@ -7,16 +7,19 @@ type ucsnode struct {
 }
 
 func UniformCostSearch(graph Graph, src, dest int) ([]int, int64) {
-	pq := NewPriorityQueue(func(value ucsnode) int64 {
-		return -value.g
+	pq := NewPriorityQueue(func(value ucsnode) float64 {
+		return value.g
 	})
 
 	pq.Enqueue(ucsnode{nodeIndex: src, g: 0, trace: []int{src}})
 
-	visited := map[int]bool{}
+	visited := make(map[int]bool)
 
 	for !pq.IsEmpty() {
 		curr := pq.Dequeue()
+		if visited[curr.nodeIndex] {
+			continue
+		}
 		visited[curr.nodeIndex] = true
 
 		if curr.nodeIndex == dest {
@@ -24,13 +27,15 @@ func UniformCostSearch(graph Graph, src, dest int) ([]int, int64) {
 		}
 
 		for neighbour, distance := range graph.Edges[curr.nodeIndex] {
-			if !visited[neighbour] {
-				x := ucsnode{}
-				x.nodeIndex = neighbour
-				x.g = curr.g + distance
-				x.trace = append(curr.trace, neighbour)
-				pq.Enqueue(x)
+			if visited[neighbour] {
+				continue
 			}
+			next := ucsnode{
+				nodeIndex: neighbour,
+				g:         curr.g + distance,
+				trace:     append(append([]int{}, curr.trace...), neighbour),
+			}
+			pq.Enqueue(next)
 		}
 	}
 	return []int{}, 0
