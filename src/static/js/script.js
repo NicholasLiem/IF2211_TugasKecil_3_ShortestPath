@@ -1,8 +1,9 @@
-let visualizer = document.getElementById("visualizer");
-let ctx = visualizer.getContext("2d");
+const visualizer = document.getElementById("visualizer");
+const ctx = visualizer.getContext("2d");
+let graph;
 
 class Node {
-    constructor(index, name, latitude, longitude) {
+    constructor({index, name, latitude, longitude}) {
         this.index = index;
         this.name = name;
         this.latitude = latitude;
@@ -12,8 +13,49 @@ class Node {
 
 class Graph {
     constructor({nodes, edges}) {
-        this.nodes = nodes;
+        this.nodes = [];
+        for (let i = 0; i < Object.keys(nodes).length; i++) {
+            const item = nodes[i];
+            this.nodes.push(new Node({
+                index: item["Index"],
+                name: item["Name"],
+                latitude: item["Latitude"],
+                longitude: item["Longitude"],
+            }));
+        }
+        this.maxLat = this.nodes.reduce((prev, curr) => prev.latitude > curr.latitude ? prev : curr).latitude;
+        this.minLat = this.nodes.reduce((prev, curr) => prev.latitude < curr.latitude ? prev : curr).latitude;
+        this.maxLon = this.nodes.reduce((prev, curr) => prev.longitude > curr.longitude ? prev : curr).longitude;
+        this.minLon = this.nodes.reduce((prev, curr) => prev.longitude < curr.longitude ? prev : curr).longitude;
         this.edges = edges;
+    }
+
+    draw(canvas) {
+        const ctx = canvas.getContext("2d");
+        const width = canvas.width * 0.7;
+        const height = canvas.height * 0.7;
+        const coords = [];
+        for (const node of this.nodes) {
+            const x = canvas.width * 0.15 + (node.longitude - this.minLon) / (this.maxLon - this.minLon) * width;
+            const y = canvas.height * 0.15 + (node.latitude - this.minLat) / (this.maxLat - this.minLat) * height;
+            coords.push([x,  y]);
+            const radius = 10;
+            drawText(node.name, x, y - radius - 10, ctx);
+            drawCircle(x, y, radius, ctx);
+        }
+        const drawn = [];
+        for (const [from, edges] of Object.entries(this.edges)) {
+            for (const [to, weight] of Object.entries(edges)) {
+                if (!([from, to] in drawn)) {
+                    const [x1, y1] = coords[from];
+                    const [x2, y2] = coords[to];
+                    drawLine(x1, y1, x2, y2, ctx);
+                    drawText(weight.toString(), (x1 + x2) / 2 - 10, (y1 + y2) / 2 - 10, ctx);
+                    drawn.push([from, to]);
+                    drawn.push([to, from]);
+                }
+            }
+        }
     }
 }
 
@@ -28,9 +70,22 @@ function getMousePos(canvas, evt) {
     };
 }
 
-function drawCircle(x, y, radius) {
+function drawCircle(x, y, radius, ctx) {
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.fill();
+}
+
+function drawText(text, x, y, ctx) {
+    ctx.font = "15px Poppins";
+    ctx.textAlign = "center";
+    ctx.fillText(text, x, y)
+}
+
+function drawLine(x1, y1, x2, y2, ctx) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
     ctx.stroke();
 }
 
@@ -50,6 +105,7 @@ window.addEventListener("resize", ev => {
     const height = visualizer.clientHeight;
     visualizer.width = width;
     visualizer.height = height;
+    graph.draw(visualizer)
 });
 
 function displayError(message) {
@@ -83,10 +139,13 @@ function parseFile(file) {
         }).then(async (responseJson) => {
             hideError()
             const {Nodes, Edges} = await responseJson
-            console.log(new Graph({
+            graph = new Graph({
                 nodes: Nodes,
                 edges: Edges,
-            }))
+            })
+            console.log(graph)
+            ctx.clearRect(0, 0, visualizer.width, visualizer.height)
+            graph.draw(visualizer)
         }).catch((error) => {
             displayError(error.message)
         })
@@ -102,16 +161,3 @@ window.onload = function () {
         connectParticles: true,
     });
 };
-
-function submitForm() {
-    var form = document.querySelector('form');
-    form.submit();
-}
-
-const urlParams = new URLSearchParams(window.location.search);
-const uploaded = urlParams.get('uploaded');
-if (uploaded === 'true') {
-    alert('File uploaded successfully');
-} else if (uploaded === 'false') {
-    alert('File type is not supported, upload file failed')
-}
