@@ -1,6 +1,9 @@
 const visualizer = document.getElementById("visualizer");
 const ctx = visualizer.getContext("2d");
+const nodeRadius = 7;
+const coords = [];
 let graph;
+let onhover = -1;
 
 class Node {
     constructor({index, name, latitude, longitude}) {
@@ -34,14 +37,10 @@ class Graph {
         const ctx = canvas.getContext("2d");
         const width = canvas.width * 0.7;
         const height = canvas.height * 0.7;
-        const coords = [];
-        for (const node of this.nodes) {
+        for (const [idx, node] of this.nodes.entries()) {
             const x = canvas.width * 0.15 + (node.longitude - this.minLon) / (this.maxLon - this.minLon) * width;
             const y = canvas.height * 0.15 + (node.latitude - this.minLat) / (this.maxLat - this.minLat) * height;
-            coords.push([x,  y]);
-            const radius = 10;
-            drawText(node.name, x, y - radius - 10, ctx);
-            drawCircle(x, y, radius, ctx);
+            coords[idx] = [x, y];
         }
         const drawn = [];
         for (const [from, edges] of Object.entries(this.edges)) {
@@ -55,6 +54,11 @@ class Graph {
                     drawn.push([to, from]);
                 }
             }
+        }
+        for (const [idx, [x, y]] of coords.entries()) {
+            const radius = nodeRadius + (onhover === idx ? 3 : 0);
+            drawText(this.nodes[idx].name, x, y - radius - 10, ctx);
+            drawCircle(x, y, radius, ctx);
         }
     }
 }
@@ -72,6 +76,7 @@ function getMousePos(canvas, evt) {
 
 function drawCircle(x, y, radius, ctx) {
     ctx.beginPath();
+    ctx.fillStyle = "#fff"
     ctx.arc(x, y, radius, 0, 2 * Math.PI);
     ctx.fill();
 }
@@ -79,11 +84,13 @@ function drawCircle(x, y, radius, ctx) {
 function drawText(text, x, y, ctx) {
     ctx.font = "15px Poppins";
     ctx.textAlign = "center";
+    ctx.fillStyle = "#fff"
     ctx.fillText(text, x, y)
 }
 
 function drawLine(x1, y1, x2, y2, ctx) {
     ctx.beginPath();
+    ctx.strokeStyle = "#a0aaef"
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.stroke();
@@ -94,13 +101,32 @@ visualizer.style.height = '100%';
 visualizer.width = visualizer.offsetWidth;
 visualizer.height = visualizer.offsetHeight;
 
-// visualizer.addEventListener("mousemove", ev => {
-//     const pos = getMousePos(visualizer, ev)
-//     ctx.clearRect(0, 0, visualizer.width, visualizer.height)
-//     drawCircle(pos.x, pos.y, 20)
-// });
+visualizer.addEventListener("mousemove", ev => {
+    const pos = getMousePos(visualizer, ev)
+    if (graph) {
+        for (const [idx, [x, y]] of coords.entries()) {
+            const radius = nodeRadius + (onhover === idx ? 5 : 0);
+            if (pos.x >= x - radius && pos.x <= x + radius && pos.y >= y - radius && pos.y <= y + radius) {
+                visualizer.style.cursor = "pointer";
+                if (onhover !== idx) {
+                    onhover = idx;
+                    ctx.clearRect(0, 0, visualizer.width, visualizer.height);
+                    graph.draw(visualizer);
+                }
+                break;
+            } else {
+                if (onhover !== -1) {
+                    onhover = -1;
+                    ctx.clearRect(0, 0, visualizer.width, visualizer.height);
+                    graph.draw(visualizer);
+                }
+                visualizer.style.cursor = "default";
+            }
+        }
+    }
+});
 
-window.addEventListener("resize", ev => {
+window.addEventListener("resize", _ => {
     const width = visualizer.clientWidth;
     const height = visualizer.clientHeight;
     visualizer.width = width;
@@ -118,7 +144,7 @@ function displayError(message) {
 function hideError() {
     const error = document.getElementById("error")
     const canvas = document.getElementById("visualizer")
-    canvas.style.backgroundColor = "#eee"
+    canvas.style.backgroundColor = "#111"
     error.style.visibility = "hidden"
 }
 
