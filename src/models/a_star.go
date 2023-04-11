@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/utils"
 	"math"
 )
 
@@ -31,7 +30,7 @@ func calculateH(graph Graph, current, destination int) float64 {
 	lon1 := node1.Longitude
 	lon2 := node2.Longitude
 
-	return utils.distance(lat1, lon1, lat2, lon2)
+	return distance(lat1, lon1, lat2, lon2)
 }
 
 func AStarSearch(graph Graph, src, dest int) ([]int, int64) {
