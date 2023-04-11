@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Go Route</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+          href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+          rel="stylesheet"
+  />
+  <link rel="stylesheet" href="../static/style.css" />
+</head>
+
+<body>
+<div class="base-container">
+  <div class="left">
+    <div class="text">
+      <div class="title">Go Router</div>
+      <div class="subtitle">
+        Minimize your costs and reach your destination.
+      </div>
+    </div>
+    <div class="file-section">
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" id="file-input" name="file" onchange="submitForm()" style="display: none;" />
+      </form>
+      <button class="choose-file" onclick="document.getElementById('file-input').click()">Upload File</button>
+      <div class="alternative">
+        or open
+        <div role="button" class="maps">Google Maps</div>
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <canvas id="visualizer"></canvas>
+  </div>
+</div>
+<canvas class="background"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
+<script src="/static/js/script.js"></script>
+</body>
+</html>

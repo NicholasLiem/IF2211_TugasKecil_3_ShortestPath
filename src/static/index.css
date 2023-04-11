@@ -1,0 +1,137 @@
+body {
+    background: linear-gradient(45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: GradientBackground 10s ease infinite;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+}
+
+.headcontainer {
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    align-items: center;
+    align-content: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.all-container{
+    align-items: center;
+    align-content: center;
+}
+
+.headcontainer h1, .headcontainer h2 {
+    text-align: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.button-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    background: linear-gradient(45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: GradientBackground 10s ease infinite;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.button {
+    background-color: #4285f4;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px;
+    margin: 10px;
+}
+
+button {
+    background-color: #4285f4;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    padding: 10px;
+}
+
+select {
+    border-radius: 5px;
+    font-size: 16px;
+    margin-left: 10px;
+    padding: 10px;
+}
+
+.traces-container {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+
+
+@keyframes GradientBackground {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+input[type="file"] {
+    opacity: 0;
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+label[for="file-input"] {
+    background-color: #4285f4;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px;
+    margin: 10px;
+}
+
+label[for="file-input"]::before {
+    content: "Upload a txt file";
+}
+
+label[for="file-input"]::file-selector-button {
+    display: none;
+}

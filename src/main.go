@@ -8,13 +8,14 @@ import (
 	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/models"
 	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/utils"
 	"io"
+	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/handlers"
 	"net/http"
 )
 
 func main() {
-	http.Handle("/", http.FileServer(http.Dir("static")))
+	http.HandleFunc("/", handlers.IndexHandler)
 	http.HandleFunc("/parse", parse)
-	// localhost
+	http.HandleFunc("/upload", handlers.UploadHandler)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		return

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/models"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -106,4 +107,14 @@ func AdjacencyMatrixFromFile(filepath string) (models.AdjacencyMatrix, error) {
 	res = models.NewAdjacencyMatrix(int(count), columnLabels, latitudes, longitudes)
 	res.Matrix = matrix
 	return res, nil
+}
+
+func Distance(lat1, lon1, lat2, lon2 float64) float64 {
+	p := 0.017453292519943295 // Math.PI / 180
+	c := math.Cos
+	a := 0.5 - c((lat2-lat1)*p)/2 +
+		c(lat1*p)*c(lat2*p)*
+			(1-c((lon2-lon1)*p))/2
+
+	return 12742 * math.Asin(math.Sqrt(a)) // 2 * R; R = 6371 km
 }
