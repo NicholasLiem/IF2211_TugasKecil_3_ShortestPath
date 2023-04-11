@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.Handle("/", http.FileServer(http.Dir("static")))
 	http.HandleFunc("/parse", handlers.ParseHandler)
 	err := http.ListenAndServe(":8080", nil)

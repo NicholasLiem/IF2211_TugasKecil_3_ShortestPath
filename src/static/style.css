@@ -1,5 +1,7 @@
 :root {
     --primary: #0062cc;
+    --secondary: #FF8F00;
+    --text: #FFFFFF;
 }
 
 * {
@@ -62,6 +64,7 @@
     background-color: var(--primary);
     color: white;
     padding: 8px;
+    margin-bottom: 10px;
     border-radius: 30px;
     border-style: none;
 }
@@ -72,6 +75,89 @@
 }
 
 .choose-file:active {
+    transform: scale(90%);
+}
+
+.dropdowns {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.dropdowns select {
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    background-color: var(--primary);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border-style: none;
+    margin-right: 10px;
+}
+
+.dropdowns select:hover {
+    filter: brightness(95%);
+    cursor: pointer;
+}
+
+.dropdowns select:active {
+    transform: scale(90%);
+}
+
+.algorithms {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.algorithms label {
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.algorithms select {
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    background-color: var(--primary);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border-style: none;
+    margin-bottom: 10px;
+}
+
+.algorithms select:hover {
+    filter: brightness(95%);
+    cursor: pointer;
+}
+
+.algorithms select:active {
+    transform: scale(90%);
+}
+
+.calculate {
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    background-color: var(--secondary);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border-style: none;
+    margin-bottom: 10px;
+}
+
+.calculate:hover {
+    filter: brightness(95%);
+    cursor: pointer;
+}
+
+.calculate:active {
     transform: scale(90%);
 }
 
