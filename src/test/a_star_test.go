@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/models"
-	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/utils"
 )
 
 func TestAStartSearch(t *testing.T) {
@@ -16,11 +15,11 @@ func TestAStartSearch(t *testing.T) {
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-	adjMat, err := utils.AdjacencyMatrixFromFile(filepath.Join(dir, "tc2.txt"))
+	adjMat, err := models.AdjacencyMatrixFromFile(filepath.Join(dir, "tc2.txt"))
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-	g := *models.NewGraphFromAdjacencyMatrix(*adjMat)
+	g := *models.NewGraphFromAdjacencyMatrix(adjMat)
 	trace, cost := models.AStarSearch(g, 0, 4)
 	traceName := make([]string, len(trace))
 	for i, nodeIndex := range trace {
