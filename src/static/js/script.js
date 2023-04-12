@@ -54,6 +54,9 @@ class Graph {
     }
 
     draw(canvas) {
+        if (!graph) {
+            return
+        }
         const ctx = canvas.getContext("2d");
         const width = canvas.width * 0.9;
         const height = canvas.height * 0.9;

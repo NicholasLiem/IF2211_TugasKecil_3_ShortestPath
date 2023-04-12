@@ -32,7 +32,7 @@ func ParseRow(line string, columns int) ([]float64, error) {
 
 	row := make([]float64, columns)
 	for i, word := range words {
-		val, err := strconv.ParseFloat(word, 64)
+		val, err := strconv.ParseFloat(strings.Trim(strings.TrimSpace(word), "\x00"), 64)
 		if err != nil {
 			return nil, fmt.Errorf("cannot parse column %d (%w)", i+1, err)
 		}
