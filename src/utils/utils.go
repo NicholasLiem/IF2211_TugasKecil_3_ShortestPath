@@ -42,8 +42,8 @@ func ParseRow(line string, columns int) ([]float64, error) {
 	return row, nil
 }
 
-func Distance(lat1, lon1, lat2, lon2 float64) float64 {
+func Distance(lat1, lon1, lat2, lon2, weightRange float64) float64 {
 	deltaX := lon2 - lon1
 	deltaY := lat2 - lat1
-	return math.Sqrt(deltaX*deltaX + deltaY*deltaY)
+	return math.Sqrt(deltaX*deltaX+deltaY*deltaY) * weightRange
 }

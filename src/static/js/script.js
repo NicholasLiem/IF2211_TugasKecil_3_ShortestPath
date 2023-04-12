@@ -39,12 +39,12 @@ class Graph {
         this.nodes = [];
         for (let i = 0; i < Object.keys(nodes).length; i++) {
             const item = nodes[i];
-            this.nodes.push(new Node({
+            this.nodes[item["Index"]] = new Node({
                 index: item["Index"],
                 name: item["Name"],
                 latitude: item["Latitude"],
                 longitude: item["Longitude"],
-            }));
+            });
         }
         this.maxLat = this.nodes.reduce((prev, curr) => prev.latitude > curr.latitude ? prev : curr).latitude;
         this.minLat = this.nodes.reduce((prev, curr) => prev.latitude < curr.latitude ? prev : curr).latitude;
@@ -57,10 +57,10 @@ class Graph {
         const ctx = canvas.getContext("2d");
         const width = canvas.width * 0.9;
         const height = canvas.height * 0.9;
-        for (const [idx, node] of this.nodes.entries()) {
+        for (const node of this.nodes) {
             const x = canvas.width * 0.05 + (node.longitude - this.minLon) / (this.maxLon - this.minLon) * width;
             const y = canvas.height * 0.05 + (node.latitude - this.minLat) / (this.maxLat - this.minLat) * height;
-            coords[idx] = [x, y];
+            coords[node.index] = [x, y];
         }
         const drawn = [];
         for (const [from, edges] of Object.entries(this.edges)) {
@@ -205,8 +205,8 @@ function displayControls() {
 
 function parseFile(file) {
     const reader = new FileReader();
-    reader.onload = (e) => {
-        fetch("http://localhost:8080/parse", {
+    reader.onload = async (e) => {
+        await fetch("http://localhost:8080/parse", {
             method: "POST",
             body: e.target.result
         }).then(async (response) => {
@@ -217,7 +217,7 @@ function parseFile(file) {
                 }
                 return response.json();
             }
-            throw new Error("Failed to upload file");
+            throw new Error("Failed to upload file: " + response.statusText);
         }).then(async (responseJson) => {
             hideError();
             const {Nodes, Edges} = await responseJson;
@@ -265,7 +265,7 @@ dstBtn.addEventListener("mousedown", (_) => {
     srcBtn.style.border = "0 none transparent";
 });
 
-document.getElementById("calculate-button").addEventListener("mousedown", (_) => {
+document.getElementById("calculate-button").addEventListener("mousedown", async (_) => {
     srcBtn.style.filter = "brightness(100%)";
     srcBtn.style.transform = "scale(100%)";
     srcBtn.style.border = "0 none transparent";
@@ -294,7 +294,7 @@ document.getElementById("calculate-button").addEventListener("mousedown", (_) =>
         dst,
         method
     }
-    fetch("http://localhost:8080/search", {
+    await fetch("http://localhost:8080/search", {
         method: "POST", body: JSON.stringify(body)
     }).then(async (response) => {
         if (response.ok) {
