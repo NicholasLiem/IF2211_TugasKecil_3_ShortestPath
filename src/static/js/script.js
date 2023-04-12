@@ -5,7 +5,8 @@ const visualizer = document.getElementById("visualizer"),
     srcBtn = document.getElementById("src-btn"),
     dstBtn = document.getElementById("dst-btn"),
     srcName = document.getElementById("src-name"),
-    dstName = document.getElementById("dst-name");
+    dstName = document.getElementById("dst-name"),
+    costLabel = document.getElementById("result-cost");
 
 let graph,
     onHover = -1,
@@ -118,7 +119,7 @@ function drawLine(x1, y1, x2, y2, color, ctx) {
 }
 
 visualizer.style.width = "100%";
-visualizer.style.height = "80%";
+visualizer.style.height = "75%";
 visualizer.width = visualizer.offsetWidth;
 visualizer.height = visualizer.offsetHeight;
 
@@ -226,6 +227,7 @@ function parseFile(file) {
             });
             ctx.clearRect(0, 0, visualizer.width, visualizer.height);
             graph.draw(visualizer);
+            costLabel.style.visibility = "hidden";
             displayControls();
         }).catch((error) => {
             displayError(error.message);
@@ -309,6 +311,8 @@ document.getElementById("calculate-button").addEventListener("mousedown", (_) =>
         }
         ctx.clearRect(0, 0, visualizer.width, visualizer.height);
         graph.draw(visualizer);
+        costLabel.style.visibility = "visible";
+        costLabel.innerText = "Total cost: " + Cost;
     }).catch((error) => {
         displayError(error.message);
     });
