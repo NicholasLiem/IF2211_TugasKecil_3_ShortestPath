@@ -11,7 +11,7 @@ import (
 
 type resultDTO struct {
 	Route []int
-	Cost  int64
+	Cost  float64
 }
 
 func SearchHandler(w http.ResponseWriter, r *http.Request) {

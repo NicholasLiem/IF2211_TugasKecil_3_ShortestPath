@@ -6,7 +6,7 @@ type ucsnode struct {
 	trace     []int
 }
 
-func UniformCostSearch(graph Graph, src, dest int) ([]int, int64) {
+func UniformCostSearch(graph Graph, src, dest int) ([]int, float64) {
 	pq := NewPriorityQueue(func(value ucsnode) float64 {
 		return -value.g
 	})
@@ -23,7 +23,7 @@ func UniformCostSearch(graph Graph, src, dest int) ([]int, int64) {
 		visited[curr.nodeIndex] = true
 
 		if curr.nodeIndex == dest {
-			return curr.trace, int64(curr.g)
+			return curr.trace, curr.g
 		}
 
 		for neighbour, distance := range graph.Edges[curr.nodeIndex] {

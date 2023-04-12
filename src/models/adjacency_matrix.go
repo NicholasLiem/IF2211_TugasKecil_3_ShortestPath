@@ -55,7 +55,7 @@ func ParseToAdjacencyMatrix(buf string) (AdjacencyMatrix, error) {
 		latitudes[i] = latitude
 		longitudes[i] = longitude
 	}
-	matrix := make([][]int64, count)
+	matrix := make([][]float64, count)
 	for i := 0; i < len(matrix); i++ {
 		matrix[i], err = utils.ParseRow(lines[i+int(count)+1], int(count))
 		if err != nil {
@@ -93,7 +93,7 @@ func AdjacencyMatrixFromFile(filepath string) (AdjacencyMatrix, error) {
 		latitudes[i] = latitude
 		longitudes[i] = longitude
 	}
-	matrix := make([][]int64, count)
+	matrix := make([][]float64, count)
 	for i := 0; i < len(matrix); i++ {
 		matrix[i], err = utils.ParseRow(lines[i+int(count)+1], int(count))
 		if err != nil {

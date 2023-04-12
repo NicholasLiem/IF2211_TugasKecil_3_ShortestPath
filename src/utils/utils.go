@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"errors"
+	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -26,7 +26,7 @@ func ParseNode(line string) (string, float64, float64, error) {
 	return name, latitude, longitude, nil
 }
 
-func parseRow(line string, columns int) ([]float64, error) {
+func ParseRow(line string, columns int) ([]float64, error) {
 	words := strings.Fields(line)
 	if len(words) != columns {
 		return nil, fmt.Errorf("invalid number of columns (%d), expected %d", len(words), columns)

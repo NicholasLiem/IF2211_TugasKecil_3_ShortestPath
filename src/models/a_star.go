@@ -37,14 +37,14 @@ func AStarSearch(graph Graph, src, dest int) ([]int, float64) {
 		visited[curr.nodeIndex] = true
 
 		if curr.nodeIndex == dest {
-			return curr.trace, float64(curr.g)
+			return curr.trace, curr.g
 		}
 
 		for neighbour, distance := range graph.Edges[curr.nodeIndex] {
 			if !visited[neighbour] {
 				x := astarnode{}
 				x.nodeIndex = neighbour
-				x.g = curr.g + float64(distance)
+				x.g = curr.g + distance
 				x.f = x.g + calculateH(graph, curr.nodeIndex, dest)
 				x.trace = append(curr.trace, neighbour)
 				pq.Enqueue(x)
