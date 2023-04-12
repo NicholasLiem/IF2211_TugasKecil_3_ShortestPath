@@ -79,9 +79,11 @@ class Graph {
                 }
             }
         }
-        for (const [idx, [x, y]] of coords.entries()) {
+        for (const node of this.nodes) {
+            const idx = node.index;
+            const [x, y] = coords[idx];
             const radius = nodeRadius + (onHover === idx ? 3 : 0);
-            drawText(this.nodes[idx].name, x, y - radius - 10, ctx);
+            drawText(node.name, x, y - radius - 10, ctx);
             const color = src === idx || dst === idx ? "#0062cc" : "#fff"
             drawCircle(x, y, radius, color, ctx);
         }
