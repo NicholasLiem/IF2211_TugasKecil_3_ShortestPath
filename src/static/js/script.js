@@ -254,11 +254,11 @@ function parseFile(file) {
             body: e.target.result
         }).then(async (response) => {
             if (response.ok) {
-                if (response.status === 500) {
-                    console.log(response);
-                    throw new Error("Failed to parse file: " + await response.text());
-                }
                 return response.json();
+            }
+            if (response.status === 500) {
+                console.log(response);
+                throw new Error("Failed to parse file: " + await response.text());
             }
             throw new Error("Failed to upload file: " + response.statusText);
         }).then(async (responseJson) => {
