@@ -225,9 +225,13 @@ function parseFile(file) {
                 nodes: Nodes,
                 edges: Edges,
             });
+            dst = -1;
+            src = -1;
+            route = [];
+            costLabel.style.visibility = "hidden";
+            
             ctx.clearRect(0, 0, visualizer.width, visualizer.height);
             graph.draw(visualizer);
-            costLabel.style.visibility = "hidden";
             displayControls();
         }).catch((error) => {
             displayError(error.message);
