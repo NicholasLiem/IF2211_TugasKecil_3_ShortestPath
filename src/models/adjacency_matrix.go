@@ -10,7 +10,7 @@ import (
 )
 
 type AdjacencyMatrix struct {
-	Matrix       [][]int64
+	Matrix       [][]float64
 	ColumnLabels []string
 	Latitudes    []float64
 	Longitudes   []float64
@@ -22,9 +22,9 @@ func (am AdjacencyMatrix) GetNodesCount() int {
 }
 
 func NewAdjacencyMatrix(nodeCount int, columnLabels []string, latitudes, longitudes []float64) AdjacencyMatrix {
-	matrix := make([][]int64, nodeCount)
+	matrix := make([][]float64, nodeCount)
 	for i := range matrix {
-		matrix[i] = make([]int64, nodeCount)
+		matrix[i] = make([]float64, nodeCount)
 	}
 
 	return AdjacencyMatrix{

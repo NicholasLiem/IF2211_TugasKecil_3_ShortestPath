@@ -2,13 +2,13 @@ package models
 
 type ucsnode struct {
 	nodeIndex int
-	g         int64
+	g         float64
 	trace     []int
 }
 
 func UniformCostSearch(graph Graph, src, dest int) ([]int, int64) {
 	pq := NewPriorityQueue(func(value ucsnode) float64 {
-		return value.g
+		return -value.g
 	})
 
 	pq.Enqueue(ucsnode{nodeIndex: src, g: 0, trace: []int{src}})

@@ -23,7 +23,7 @@ func calculateH(graph Graph, current, destination int) float64 {
 	return utils.Distance(lat1, lon1, lat2, lon2)
 }
 
-func AStarSearch(graph Graph, src, dest int) ([]int, int64) {
+func AStarSearch(graph Graph, src, dest int) ([]int, float64) {
 	pq := NewPriorityQueue(func(value astarnode) float64 {
 		return -value.f
 	})
@@ -37,7 +37,7 @@ func AStarSearch(graph Graph, src, dest int) ([]int, int64) {
 		visited[curr.nodeIndex] = true
 
 		if curr.nodeIndex == dest {
-			return curr.trace, int64(curr.g)
+			return curr.trace, float64(curr.g)
 		}
 
 		for neighbour, distance := range graph.Edges[curr.nodeIndex] {
