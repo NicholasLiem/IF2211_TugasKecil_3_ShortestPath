@@ -3,6 +3,7 @@ Menentukan Lintasan Terpendek</b> </h1>
 
 ## **Daftar Isi**
 * [Deskripsi Program](#deskripsi-program)
+* [Dependencies](#dependency)
 * [Cara Menjalankan Program](#cara-menjalankan-program)
 * [Penulis](#penulis)
 * [Ekstra](#meme-section)
@@ -17,6 +18,9 @@ ruler di Google Map, atau cara lainnya yang disediakan oleh Google Map. Langkah 
 
 Berdasarkan graf yang dibentuk, lalu program menerima input simpul asal dan simpul tujuan, lalu menentukan lintasan terpendek antara keduanya menggunakan algoritma UCS dan A*. Lintasan terpendek dapat ditampilkan pada peta/graf (misalnya jalan-jalan yang menyatakan lintasan terpendek diberi warna merah). Nilai
 heuristik yang dipakai adalah jarak garis lurus dari suatu titik ke tujuan.</p>
+
+## **Dependency**
+1. Go 1.20.3
 
 ## **Cara Menjalankan Program**
 1. Klon repositori ini <br>
