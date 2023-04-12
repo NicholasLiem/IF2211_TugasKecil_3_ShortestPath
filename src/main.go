@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/handlers"
+	"github.com/NicholasLiem/Tucil3_13521083_13521135/handlers"
 	"net/http"
 )
 

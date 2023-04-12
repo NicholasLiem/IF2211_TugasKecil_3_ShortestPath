@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/models"
+	"github.com/NicholasLiem/Tucil3_13521083_13521135/models"
 )
 
 func TestAStartSearch(t *testing.T) {
