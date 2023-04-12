@@ -23,11 +23,11 @@ func NewPriorityQueue[T any, U number](byPriority func(T) U) PriorityQueue[T, U]
 	}
 }
 
-func (pq PriorityQueue[T, U]) Size() int {
+func (pq *PriorityQueue[T, U]) Size() int {
 	return pq.size
 }
 
-func (pq PriorityQueue[T, U]) IsEmpty() bool {
+func (pq *PriorityQueue[T, U]) IsEmpty() bool {
 	return pq.size == 0
 }
 
@@ -64,7 +64,7 @@ func (pq *PriorityQueue[T, U]) Dequeue() T {
 	return val
 }
 
-func (pq PriorityQueue[T, U]) GetItems() []T {
+func (pq *PriorityQueue[T, U]) GetItems() []T {
 	items := make([]T, pq.size)
 	p := pq.head
 	for i := range items {

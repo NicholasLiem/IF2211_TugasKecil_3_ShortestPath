@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Go Route</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,500,1,0"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
+</head>
+
+<body>
+<div class="base-container">
+    <div class="left">
+        <div class="text">
+            <div class="title">Go Router</div>
+            <div class="subtitle">
+                Minimize your costs and reach your destination.
+            </div>
+        </div>
+        <div class="file-section">
+            <input type="file" id="file-input" accept="text/plain" onchange="parseFile(this.files[0])"
+                   style="display: none;"/>
+            <button class="primary-button" onclick="document.getElementById('file-input').click()">
+                Upload File
+            </button>
+            <div class="alternative">
+                or open
+                <div role="button" class="maps">Google Maps</div>
+            </div>
+            <div id="error">
+                <span class="material-symbols-outlined icon">error</span>
+                <span class="error-msg">Error</span>
+            </div>
+        </div>
+    </div>
+    <div id="right">
+        <canvas id="visualizer"></canvas>
+        <div id="controls">
+            <div class="control-section">
+                <div class="node-control">
+                    <p id="src-name" style="text-align: right;">
+                        No source selected
+                    </p>
+                    <button class="primary-button" id="src-btn">
+                        Select source
+                    </button>
+                </div>
+                <div id="calculate">
+                    <button id="calculate-button">
+                          <span class="material-symbols-outlined">
+                            travel_explore
+                          </span>
+                    </button>
+                </div>
+                <div class="node-control">
+                    <button class="primary-button" id="dst-btn">
+                        Select destination
+                    </button>
+                    <p id="dst-name" style="text-align: left">
+                        No destination selected
+                    </p>
+                </div>
+            </div>
+            <div class="control-section">
+                <div class="algorithms">
+                    <label for="algorithm"></label>
+                    <select name="algorithm" id="algorithm">
+                        <option value="" disabled selected>Select Algorithm</option>
+                        <option value="a*">A* Algorithm</option>
+                        <option value="ucs">UCS Algorithm</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<canvas class="background"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

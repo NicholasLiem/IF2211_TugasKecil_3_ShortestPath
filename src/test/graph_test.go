@@ -2,7 +2,6 @@ package test
 
 import (
 	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/models"
-	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/utils"
 	"path/filepath"
 	"reflect"
 	"testing"
@@ -69,7 +68,7 @@ func TestAdjacencyMatrixFromFile(t *testing.T) {
 	if err != nil {
 		t.Errorf("[ERROR] cannot get source file path")
 	}
-	adjMat, err := utils.AdjacencyMatrixFromFile(dir + "/tc1")
+	adjMat, err := models.AdjacencyMatrixFromFile(dir + "/tc1.txt")
 	if err != nil {
 		t.Errorf(err.Error())
 	}

@@ -1,7 +1,7 @@
 package models
 
 import (
-	"math"
+	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/utils"
 )
 
 type astarnode struct {
@@ -9,16 +9,6 @@ type astarnode struct {
 	f         float64
 	g         float64
 	trace     []int
-}
-
-func distance(lat1, lon1, lat2, lon2 float64) float64 {
-	p := 0.017453292519943295 // Math.PI / 180
-	c := math.Cos
-	a := 0.5 - c((lat2-lat1)*p)/2 +
-		c(lat1*p)*c(lat2*p)*
-			(1-c((lon2-lon1)*p))/2
-
-	return 12742 * math.Asin(math.Sqrt(a)) // 2 * R; R = 6371 km
 }
 
 func calculateH(graph Graph, current, destination int) float64 {
@@ -30,7 +20,7 @@ func calculateH(graph Graph, current, destination int) float64 {
 	lon1 := node1.Longitude
 	lon2 := node2.Longitude
 
-	return distance(lat1, lon1, lat2, lon2)
+	return utils.Distance(lat1, lon1, lat2, lon2)
 }
 
 func AStarSearch(graph Graph, src, dest int) ([]int, float64) {

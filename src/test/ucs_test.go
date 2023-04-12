@@ -16,7 +16,7 @@ func TestUniformCostSearch(t *testing.T) {
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-	adjMat, err := utils.AdjacencyMatrixFromFile(filepath.Join(dir, "tc2"))
+	adjMat, err := utils.AdjacencyMatrixFromFile(filepath.Join(dir, "tc2.txt"))
 	if err != nil {
 		t.Errorf(err.Error())
 	}
