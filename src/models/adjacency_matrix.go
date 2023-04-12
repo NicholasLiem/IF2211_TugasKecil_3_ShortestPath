@@ -3,7 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
-	"github.com/NicholasLiem/IF2211_TugasKecil_3_RoutePlanning/utils"
+	"github.com/NicholasLiem/Tucil3_13521083_13521135/utils"
 	"os"
 	"strconv"
 	"strings"
